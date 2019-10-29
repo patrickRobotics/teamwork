@@ -1,0 +1,12 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.6-alpine
+    volumes:
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=teamwork_db
+      - POSTGRES_USER=app_user
+      - POSTGRES_PASSWORD=P@ssw0rd
+    ports:
+      - 5432:5432
