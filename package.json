@@ -1,0 +1,28 @@
+{
+  "name": "teamwork",
+  "version": "1.0.0",
+  "description": "DevC Training with Andela Capstone Project ",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrickRobotics/teamwork.git"
+  },
+  "keywords": [
+    "DevC",
+    "Node",
+    "API",
+    "React",
+    "Express",
+    "Capstone",
+    "Project"
+  ],
+  "author": "Patrick Irungu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patrickRobotics/teamwork/issues"
+  },
+  "homepage": "https://github.com/patrickRobotics/teamwork#readme"
+}
