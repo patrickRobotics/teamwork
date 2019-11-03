@@ -2,12 +2,12 @@
   "name": "teamwork",
   "version": "1.0.0",
   "description": "DevC Training with Andela Capstone Project ",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start:dev": "nodemon index.js",
-    "start": "node index.js",
+    "start:dev": "nodemon src/index.js",
+    "start": "node src/index.js",
     "test": "npm test",
-    "create": "node ./services/db createTables"
+    "create": "node src/services/db createTables"
   },
   "repository": {
     "type": "git",
@@ -33,9 +33,14 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "make-runnable": "^1.3.6",
-    "pg": "^7.12.1"
+    "pg": "^7.12.1",
+    "body-parser": "latest"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
     "nodemon": "^1.19.4"
   }
 }
