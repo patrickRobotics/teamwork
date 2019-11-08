@@ -6,8 +6,8 @@
   "scripts": {
     "start:dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "test": "mocha",
-    "test-with-coverage": "nyc --reporter=text mocha",
+    "test": "mocha src/tests/*.js --exit",
+    "test-with-coverage": "nyc --reporter=text mocha src/tests/",
     "create": "node src/services/db createTables"
   },
   "repository": {
