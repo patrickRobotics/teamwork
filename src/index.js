@@ -21,7 +21,7 @@ app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     // eslint-disable-next-line no-console
     console.log(`App running on port ${port}.`);
 });
@@ -110,3 +110,5 @@ app.get('/employees/:id', (req, res) => {
         });
     });
 });
+
+module.exports = server;
