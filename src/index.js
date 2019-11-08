@@ -1,8 +1,8 @@
-import { pool } from './services/db';
-
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
+
+const { pool } = require('./services/db');
 
 
 const app = express();
@@ -62,9 +62,7 @@ app.post('/employees', (req, res) => {
     };
 
     pool.connect((err, client, done) => {
-        const query = 'INSERT INTO '
-            + 'employees(firstName, lastName, email, password, gender, jobRole, department, address) '
-            + 'VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
+        const query = 'INSERT INTO employees(firstName, lastName, email, password, gender, jobRole, department, address) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
         const values = [
             data.first_name, data.last_name, data.email,
             data.password, data.gender, data.job_role,

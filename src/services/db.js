@@ -1,7 +1,8 @@
-const pg = require('pg');
-const dtenv = require('dotenv');
+const { Pool } = require('pg');
+const dotenv = require('dotenv');
 
-dtenv.config();
+dotenv.config();
+const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
     user: process.env.DB_USER,
@@ -12,12 +13,13 @@ const config = {
     idleTimeoutMillis: 30000,
 };
 
-const pool = new pg.Pool(config);
+const connectionString = `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_DATABASE}`;
 
-pool.on('connect', () => {
-    // eslint-disable-next-line no-console
-    console.log('connected to the Database');
+const pool = new Pool({
+    connectionString: isProduction ? process.env.DATABASE_URL : connectionString,
+    ssl: isProduction,
 });
+
 
 const createTables = () => {
     const employeeTable = `CREATE TABLE IF NOT EXISTS employees (
