@@ -5,15 +5,6 @@ const bcrypt = require('bcrypt');
 dotenv.config();
 const isProduction = process.env.NODE_ENV === 'production';
 
-const config = {
-    user: process.env.DB_USER,
-    database: process.env.DB_DATABASE,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-    max: 10, // max number of clients in the pool
-    idleTimeoutMillis: 30000,
-};
-
 const connectionString = `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_DATABASE}`;
 
 const pool = new Pool({
@@ -106,7 +97,7 @@ pool.on('remove', () => {
 module.exports = {
     pool,
     createTables,
-    createAdminUSer
+    createAdminUSer,
 };
 
 require('make-runnable');
