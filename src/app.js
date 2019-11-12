@@ -5,9 +5,7 @@ const bcrypt = require('bcrypt');
 
 const { pool } = require('./services/db');
 
-
 const app = express();
-const port = process.env.PORT || '3000';
 
 app.use(cors());
 
@@ -17,16 +15,28 @@ app.use(
         extended: true,
     }),
 );
-
-app.get('/', (request, response) => {
-    response.json({ info: 'Node.js, Express, and Postgres API' });
+app.get('/employees', (req, res) => {
+    pool.connect((err, client, done) => {
+        const query = 'SELECT id, firstName, lastName, email, gender, department, address, createdon FROM users';
+        client.query(query, (error, result) => {
+            done();
+            if (error) {
+                res.status(400).json({ error });
+            }
+            if (result.rows < '1') {
+                res.status(404).send({
+                    status: 'error',
+                    error: 'No employee information found',
+                });
+            } else {
+                res.status(200).send({
+                    status: 'success',
+                    data: result.rows,
+                });
+            }
+        });
+    });
 });
-
-const server = app.listen(port, () => {
-    // eslint-disable-next-line no-console
-    console.log(`App running on port ${port}.`);
-});
-
 app.get('/employees', (req, res) => {
     pool.connect((err, client, done) => {
         const query = 'SELECT id, firstName, lastName, email, gender, department, address, createdon FROM users';
@@ -117,4 +127,4 @@ app.get('/employees/:id', (req, res) => {
     });
 });
 
-module.exports = server;
+module.exports = app;
