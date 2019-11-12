@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const request = require('request');
-const server = require('../index');
+const server = require('../server');
 
 // eslint-disable-next-line no-undef
 describe('Test App Server', () => {
