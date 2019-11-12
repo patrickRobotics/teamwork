@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 const { pool } = require('./services/db');
 
@@ -28,7 +29,7 @@ const server = app.listen(port, () => {
 
 app.get('/employees', (req, res) => {
     pool.connect((err, client, done) => {
-        const query = 'SELECT * FROM employees';
+        const query = 'SELECT id, firstName, lastName, email, gender, department, address, createdon FROM users';
         client.query(query, (error, result) => {
             done();
             if (error) {
@@ -56,33 +57,38 @@ app.post('/employees', (req, res) => {
         email: req.body.email,
         password: req.body.password,
         gender: req.body.gender,
-        job_role: req.body.jobRole,
+        is_admin: req.body.is_admin,
         department: req.body.department,
         address: req.body.address,
     };
+    bcrypt.hash(data.password, 10, (er, hash) => {
+        if (!er) {
+            pool.connect((err, client, done) => {
+                const query = 'INSERT INTO users(firstName, lastName, email, password, gender, is_admin, department, address) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
+                const values = [
+                    data.first_name, data.last_name, data.email,
+                    hash, data.gender, data.is_admin,
+                    data.department, data.address,
+                ];
 
-    pool.connect((err, client, done) => {
-        const query = 'INSERT INTO employees(firstName, lastName, email, password, gender, jobRole, department, address) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
-        const values = [
-            data.first_name, data.last_name, data.email,
-            data.password, data.gender, data.job_role,
-            data.department, data.address,
-        ];
-
-        client.query(query, values, (error, result) => {
-            done();
-            if (error) {
-                res.status(400).json({
-                    status: 'error',
-                    error,
+                client.query(query, values, (error, result) => {
+                    done();
+                    if (error) {
+                        res.status(400)
+                            .json({
+                                status: 'error',
+                                error,
+                            });
+                    } else {
+                        res.status(202)
+                            .send({
+                                status: 'success',
+                                result: result.rows[0],
+                            });
+                    }
                 });
-            } else {
-                res.status(202).send({
-                    status: 'success',
-                    result: result.rows[0],
-                });
-            }
-        });
+            });
+        }
     });
 });
 
@@ -90,7 +96,7 @@ app.get('/employees/:id', (req, res) => {
     // eslint-disable-next-line radix
     const employeeId = parseInt(req.params.id);
     pool.connect((err, client, done) => {
-        const query = 'SELECT * FROM employees WHERE id = $1';
+        const query = 'SELECT id, firstName, lastName, email, gender, department, address, createdon FROM users WHERE id = $1';
         client.query(query, [employeeId], (error, result) => {
             done();
             if (error) {
