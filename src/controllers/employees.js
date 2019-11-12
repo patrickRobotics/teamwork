@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { pool } = require('../services/db');
 
-
 exports.login = (req, res) => {
     const { email } = req.body;
     const { password } = req.body;
