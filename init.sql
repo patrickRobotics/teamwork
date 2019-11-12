@@ -5,7 +5,7 @@ CREATE TABLE Employees (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     gender VARCHAR(20) NOT NULL,
-    jobRole VARCHAR(50) NOT NULL,
+    is_admin BOOLEAN NOT NULL,
     department VARCHAR(50) NULL,
     address VARCHAR(255) NULL,
     createdOn TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -40,8 +40,8 @@ CREATE TABLE Gifs (
 CREATE TABLE Comments (
     id SERIAL PRIMARY KEY,
     comment VARCHAR(255) NOT NULL,
-    postId INTEGER REFERENCES Posts(id),
-    gifId INTEGER REFERENCES Gifs(id),
+    postId INTEGER REFERENCES Posts(id) NULL,
+    gifId INTEGER REFERENCES Gifs(id) NULL,
     authorId INTEGER REFERENCES Employees(id),
     createdOn TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
