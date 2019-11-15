@@ -12,7 +12,7 @@ module.exports.isAuthorized = (req, res, next) => {
             if (err) {
                 return res.status(401).json({
                     status: 'error',
-                    error: 'Invalid token',
+                    error: 'Invalid Authentication token',
                 });
             }
             req.decoded = decoded;

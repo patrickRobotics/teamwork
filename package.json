@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start:dev": "nodemon src/server.js",
-    "start": "node src/index.js",
+    "start": "node src/server.js",
     "test": "mocha src/tests/*.js --exit",
     "test-with-coverage": "nyc --reporter=text mocha src/tests/",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
