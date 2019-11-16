@@ -44,6 +44,7 @@ const createTables = () => {
             id SERIAL PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             imageUrl VARCHAR(255) NOT NULL,
+            publicId VARCHAR(255) NOT NULL,
             authorId INTEGER REFERENCES users(Id),
             flagged BOOLEAN NULL,
             createdOn TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
