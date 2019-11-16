@@ -6,12 +6,12 @@ const auth = require('../middleware/auth');
 
 const routesCtrl = require('../controllers/posts');
 
-router.post('/posts', auth.isAuthorized, routesCtrl.createPost);
-router.put('/posts/:id', auth.isAuthorized, routesCtrl.updatePost);
+router.post('/articles', auth.isAuthorized, routesCtrl.createPost);
+router.put('/articles/:id', auth.isAuthorized, routesCtrl.updatePost);
 
-router.get('/posts', auth.isAuthorized, routesCtrl.getPosts);
-router.get('/posts/:id', auth.isAuthorized, routesCtrl.getPostById);
+router.get('/articles', auth.isAuthorized, routesCtrl.getPosts);
+router.get('/articles/:id', auth.isAuthorized, routesCtrl.getPostById);
 
-router.delete('/posts/:id', auth.isAuthorized, routesCtrl.deletePost);
+router.delete('/articles/:id', auth.isAuthorized, routesCtrl.deletePost);
 
 module.exports = router;

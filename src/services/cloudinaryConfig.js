@@ -18,3 +18,15 @@ exports.uploads = (file) => new Promise((resolve, reject) => {
         }
     );
 });
+
+exports.delete = (publicId) => new Promise((resolve, reject) => {
+    cloudinary.v2.uploader.destroy(
+        publicId,
+        (error, result) => {
+            if (error) {
+                throw new Error(error);
+            }
+            resolve(result);
+        }
+    );
+});

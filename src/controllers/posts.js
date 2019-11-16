@@ -39,7 +39,7 @@ exports.getPostById = (req, res) => {
             if (result.rows < '1') {
                 res.status(404).send({
                     status: 'error',
-                    error: 'User with that id was not found',
+                    error: 'Article with that id was not found',
                 });
             } else {
                 res.status(200).send({
