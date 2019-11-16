@@ -46,9 +46,25 @@ exports.updateGif = (req, res) => {
 };
 
 exports.getGifs = (req, res) => {
-    res.status(400).json({
-        status: 'error',
-        error: 'An error occurred with your query',
+    pool.connect((err, client, done) => {
+        const query = 'SELECT * FROM gifs';
+        client.query(query, (error, result) => {
+            done();
+            if (error) {
+                res.status(400).json({ error });
+            }
+            if (result.rows < '1') {
+                res.status(404).send({
+                    status: 'error',
+                    error: 'No posts found',
+                });
+            } else {
+                res.status(200).send({
+                    status: 'success',
+                    data: result.rows,
+                });
+            }
+        });
     });
 };
 
