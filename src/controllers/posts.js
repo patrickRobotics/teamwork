@@ -27,7 +27,7 @@ exports.getPostById = (req, res) => {
     // eslint-disable-next-line radix
     const postId = parseInt(req.params.id);
     pool.connect((err, client, done) => {
-        const query = 'SELECT id, articletitle, article, authorid, flagged, createdon FROM posts WHERE id = $1';
+        const query = 'SELECT id, title, article, authorid, flagged, createdon FROM posts WHERE id = $1';
         client.query(query, [postId], (error, result) => {
             done();
             if (error) {
@@ -53,13 +53,13 @@ exports.getPostById = (req, res) => {
 
 exports.createPost = (req, res) => {
     const data = {
-        articleTitle: req.body.articleTitle,
+        title: req.body.title,
         article: req.body.article,
         authorId: req.body.authorId,
     };
     pool.connect((err, client, done) => {
-        const query = 'INSERT INTO posts(articletitle, article, authorid) VALUES($1,$2,$3) RETURNING *';
-        const values = [data.articleTitle, data.article, data.authorId];
+        const query = 'INSERT INTO posts(title, article, authorid) VALUES($1,$2,$3) RETURNING *';
+        const values = [data.title, data.article, data.authorId];
         client.query(query, values, (error, result) => {
             done();
             if (error) {
@@ -81,14 +81,14 @@ exports.updatePost = (req, res) => {
     // eslint-disable-next-line radix
     const postId = parseInt(req.params.id);
     const data = {
-        articleTitle: req.body.articleTitle,
+        title: req.body.title,
         article: req.body.article,
         authorId: req.body.authorId,
     };
     pool.connect((err, client, done) => {
         client.query(
-            'UPDATE posts SET articletitle=$2, article=$3, authorid=$4 WHERE id = $1',
-            [postId, data.articleTitle, data.article, data.authorId],
+            'UPDATE posts SET title=$2, article=$3, authorid=$4 WHERE id = $1',
+            [postId, data.title, data.article, data.authorId],
             (error) => {
                 done();
                 if (error) {

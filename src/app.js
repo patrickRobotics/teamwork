@@ -5,6 +5,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
 const gifRoutes = require('./routes/gifs');
+const feedRoutes = require('./routes/feeds');
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.get('/', (request, response) => {
 app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/', postsRoutes);
 app.use('/api/v1/', gifRoutes);
+app.use('/api/v1/', feedRoutes);
 
 module.exports = app;

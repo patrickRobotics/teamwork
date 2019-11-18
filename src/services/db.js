@@ -34,7 +34,7 @@ const createTables = () => {
         );
         CREATE TABLE IF NOT EXISTS posts (
             id SERIAL PRIMARY KEY,
-            articleTitle VARCHAR(255) NOT NULL,
+            title VARCHAR(255) NOT NULL,
             article VARCHAR(255) NOT NULL,
             authorId INTEGER REFERENCES users(id),
             flagged BOOLEAN NULL,
