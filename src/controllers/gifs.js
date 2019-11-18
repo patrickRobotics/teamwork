@@ -118,10 +118,17 @@ exports.getGifsById = (req, res) => {
                     error: 'Gif with that id was not found',
                 });
             } else {
-                res.status(200).send({
-                    status: 'success',
-                    data: result.rows,
-                });
+                const query1 = 'SELECT id, authorid, comment FROM comments WHERE gifid = $1';
+                client.query(query1, [gifId])
+                    .then((data) => {
+                        const comments = data.rows[0];
+                        Object.assign(result.rows[0], { comments });
+                        res.status(200).send({
+                            status: 'success',
+                            data: result.rows,
+                        });
+                        // eslint-disable-next-line no-console
+                    }).catch((e) => console.log(e));
             }
         });
     });
@@ -158,6 +165,40 @@ exports.deleteGif = (req, res) => {
                     }
                 });
             });
+        });
+    });
+};
+
+exports.gifComment = (req, res) => {
+    // eslint-disable-next-line radix
+    const gifId = parseInt(req.params.id);
+    let token = req.headers.token || req.headers.authorization;
+    if (token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length);
+    }
+    const authData = jwt.verify(token, process.env.TOKEN_SECRET);
+    const data = {
+        authorId: authData.id,
+        comment: req.body.comment,
+    };
+    pool.connect((err, client, done) => {
+        const query = 'INSERT INTO comments(comment, gifid, authorid) VALUES($1,$2,$3) RETURNING *';
+        const values = [data.comment, gifId, data.authorId];
+        client.query(query, values, (error, result) => {
+            done();
+            if (error) {
+                res.status(400).json({
+                    status: 'error',
+                    error: 'An error occurred with your query',
+                });
+            } else {
+                const message = 'Comment successfully created';
+                Object.assign(result.rows[0], { message });
+                res.status(202).send({
+                    status: 'success',
+                    data: result.rows[0],
+                });
+            }
         });
     });
 };

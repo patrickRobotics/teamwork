@@ -15,4 +15,6 @@ router.get('/gifs/:id', auth.isAuthorized, gifsCtrl.getGifsById);
 
 router.delete('/gifs/:id', auth.isAuthorized, gifsCtrl.deleteGif);
 
+router.post('/gifs/:id/comment', auth.isAuthorized, gifsCtrl.gifComment);
+
 module.exports = router;
