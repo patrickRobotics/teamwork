@@ -38,7 +38,7 @@ paths:
     post:
       tags:
         - User
-      summary: 'creates a new user'
+      summary: 'Admin creates a new user'
       produces:
         - application/json
       security:
@@ -51,10 +51,12 @@ paths:
           description: 'It enables an admin to add a new user account'
           required: false
           schema:
-            $ref: '#/definitions/signUp'
+            $ref: '#/definitions/UserCreate'
       responses:
         '201':
           description: 'An object with user details'
+          schema:
+            $ref: '#/definitions/User'
         '401':
           description: 'Unauthorized operation'
           schema:
@@ -80,6 +82,92 @@ paths:
           description: 'Unauthorized operation'
           schema:
             $ref: '#/definitions/Error'
+  /auth/users/{userId}:
+    get:
+      tags:
+        - User
+      summary: 'Get user by id'
+      produces:
+        - application/json
+      security:
+        - Bearer: []
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          required: true
+          description: Numeric ID of the user to get.
+      responses:
+        '200':
+          description: User object
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '401':
+          description: 'Unauthorized operation'
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: 'User not found'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - User
+      summary: 'Admin update an existing user'
+      produces:
+        - application/json
+      security:
+        - Bearer: []
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          required: true
+          description: Numeric ID of the user to update.
+      responses:
+        '200':
+          description: User object
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '401':
+          description: 'Unauthorized operation'
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: 'User specified by id does not exist'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - User
+      summary: 'Admin delete an existing user'
+      produces:
+        - application/json
+      security:
+        - Bearer: []
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          required: true
+          description: Numeric ID of the user to delete.
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/Success'
+        '401':
+          description: 'Unauthorized operation'
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: 'User specified by id does not exist'
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   Login:
@@ -92,16 +180,34 @@ definitions:
   Token:
     type: object
     properties:
-      token:
+      status:
         type: string
+      data:
+        type: object
+        properties:
+          token:
+            type: string
+          id:
+            type: string
+          email:
+            type: string
+          password:
+            type: string
   Error:
     type: object
     properties:
-      message:
+      status:
         type: string
       error:
         type: string
-  signUp:
+  Success:
+    type: object
+    properties:
+      status:
+        type: string
+      message:
+        type: string
+  UserCreate:
     type: object
     properties:
       user:
