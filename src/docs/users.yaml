@@ -1,5 +1,5 @@
 paths:
-  /auth/login/:
+  /auth/signin/:
     post:
       tags:
         - Auth
@@ -34,7 +34,7 @@ paths:
           description: 'A server error occurred'
           schema:
             $ref: '#/definitions/Error'
-  /auth/users/:
+  /auth/create-user/:
     post:
       tags:
         - User
@@ -59,6 +59,7 @@ paths:
           description: 'Unauthorized operation'
           schema:
             $ref: '#/definitions/Error'
+  /auth/users/:
     get:
       tags:
         - User
