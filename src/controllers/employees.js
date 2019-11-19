@@ -26,9 +26,9 @@ exports.login = (req, res) => {
                     // eslint-disable-next-line consistent-return
                     bcrypt.compare(req.body.password, result.rows[0].password).then((valid) => {
                         if (!valid) {
-                            return res.status(401).json({
+                            return res.status(403).json({
                                 status: 'error',
-                                error: new Error('Incorrect password!'),
+                                error: 'Incorrect email or password!',
                             });
                         }
                         const token = jwt.sign({ id: result.rows[0].id }, process.env.TOKEN_SECRET, {
@@ -41,7 +41,8 @@ exports.login = (req, res) => {
                         });
                     }).catch((er) => {
                         res.status(500).json({
-                            error: new Error(er),
+                            status: 'error',
+                            error: 'A server error occurred',
                         });
                     });
                 }
