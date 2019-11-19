@@ -69,8 +69,12 @@ paths:
         - Bearer: []
       parameters: []
       responses:
-        '201':
-          description: 'An list of user details'
+        '200':
+          description: An array of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
         '401':
           description: 'Unauthorized operation'
           schema:
@@ -118,3 +122,25 @@ definitions:
             type: string
           address:
             type: string
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      firstname:
+        type: string
+      lastname:
+        type: string
+      email:
+        type: string
+      is_admin:
+        type: boolean
+      gender:
+        type: string
+      department:
+        type: string
+      address:
+        type: string
+      createdon:
+        type: string
+        format: date
