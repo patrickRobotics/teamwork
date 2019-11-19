@@ -1,0 +1,120 @@
+paths:
+  /auth/login/:
+    post:
+      tags:
+        - Auth
+      summary: 'Allow users to log in, and to receive a Token'
+      produces: '-application/json'
+      parameters:
+        -
+          in: body
+          name: body
+          description: 'The email/password'
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        '200':
+          description: 'Login Success'
+          schema:
+            $ref: '#/definitions/Token'
+        '400':
+          description: 'Error with your request'
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: 'Bad credentials OR if user can not login'
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: 'The user is not found'
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: 'A server error occurred'
+          schema:
+            $ref: '#/definitions/Error'
+  /auth/users/:
+    post:
+      tags:
+        - User
+      summary: 'creates a new user'
+      produces:
+        - application/json
+      security:
+        -
+          Bearer: []
+      parameters:
+        -
+          in: body
+          name: 'Create new user'
+          description: 'It enables an admin to add a new user account'
+          required: false
+          schema:
+            $ref: '#/definitions/signUp'
+      responses:
+        '201':
+          description: 'An object with user details'
+        '401':
+          description: 'Unauthorized operation'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - User
+      summary: 'Get list of user'
+      produces:
+        - application/json
+      security:
+        - Bearer: []
+      parameters: []
+      responses:
+        '201':
+          description: 'An list of user details'
+        '401':
+          description: 'Unauthorized operation'
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  Login:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  Token:
+    type: object
+    properties:
+      token:
+        type: string
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+      error:
+        type: string
+  signUp:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          first_name:
+            type: string
+          lasst_name:
+            type: string
+          email:
+            type: string
+          password:
+            type: string
+          gender:
+            type: string
+          is_admin:
+            type: boolean
+          department:
+            type: string
+          address:
+            type: string

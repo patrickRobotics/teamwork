@@ -1,7 +1,7 @@
 {
   "name": "teamwork",
   "version": "1.0.0",
-  "description": "DevC Training with Andela Capstone Project ",
+  "description": "DevC Training with Andela Capstone Project",
   "main": "src/index.js",
   "scripts": {
     "start:dev": "nodemon src/server.js",
@@ -46,6 +46,7 @@
     "pg": "^7.12.1",
     "pg-pool": "^2.0.7",
     "request": "^2.88.0",
+    "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.2"
   },
   "devDependencies": {
