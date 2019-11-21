@@ -28,6 +28,8 @@ exports.createGif = async (req, res) => {
                         error: 'An error occurred with your query',
                     });
                 } else {
+                    const message = 'GIF image successfully posted';
+                    Object.assign(result.rows[0], { message });
                     res.status(202).send({
                         status: 'success',
                         result: result.rows[0],
@@ -56,7 +58,7 @@ exports.updateGif = async (req, res) => {
         };
         pool.connect((err, client, done) => {
             client.query(
-                'UPDATE gifs SET title=$2, imageurl=$3, authorid=$4, publicId=$5 WHERE id = $1',
+                'UPDATE gifs SET title=$2, imageurl=$3, authorid=$4, publicId=$5 WHERE gifid = $1',
                 [gifId, data.title, data.imageUrl, data.authorId, data.publicId],
                 (error) => {
                     done();
@@ -103,7 +105,7 @@ exports.getGifsById = (req, res) => {
     // eslint-disable-next-line radix
     const gifId = parseInt(req.params.id);
     pool.connect((err, client, done) => {
-        const query = 'SELECT id, title, imageurl, publicid, authorid, flagged, createdon FROM gifs WHERE id = $1';
+        const query = 'SELECT gifid, title, imageurl, publicid, authorid, flagged, createdon FROM gifs WHERE gifid = $1';
         client.query(query, [gifId], (error, result) => {
             done();
             if (error) {
@@ -118,7 +120,7 @@ exports.getGifsById = (req, res) => {
                     error: 'Gif with that id was not found',
                 });
             } else {
-                const query1 = 'SELECT id, authorid, comment FROM comments WHERE gifid = $1';
+                const query1 = 'SELECT commentid, authorid, comment FROM comments WHERE gifid = $1';
                 client.query(query1, [gifId])
                     .then((data) => {
                         const comments = data.rows[0];
@@ -138,7 +140,7 @@ exports.deleteGif = (req, res) => {
     // eslint-disable-next-line radix
     const gifId = parseInt(req.params.id);
     pool.connect((er, client, done) => {
-        const query1 = 'SELECT publicid FROM gifs WHERE id = $1';
+        const query1 = 'SELECT publicid FROM gifs WHERE gifid = $1';
         client.query(query1, [gifId], (err, result) => {
             if (result.rows < '1') {
                 res.status(404)
@@ -150,7 +152,7 @@ exports.deleteGif = (req, res) => {
 
             const publicId = result.rows[0].publicid;
             cloudinary.delete(publicId).then((results) => {
-                const query = 'DELETE from gifs WHERE id = $1';
+                const query = 'DELETE from gifs WHERE gifid = $1';
                 client.query(query, [gifId], (error) => {
                     done();
                     if (error) {

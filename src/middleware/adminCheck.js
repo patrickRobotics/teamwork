@@ -9,7 +9,7 @@ module.exports.isAdmin = (req, res, next) => {
     }
     const data = jwt.verify(token, process.env.TOKEN_SECRET);
     pool.connect((err, client, done) => {
-        const query = 'SELECT id, is_admin FROM users WHERE id = $1';
+        const query = 'SELECT userId, is_admin FROM users WHERE userId = $1';
         client.query(query, [data.id], (error, result) => {
             done();
             if (result.rows[0].is_admin === true) {

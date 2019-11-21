@@ -15,7 +15,7 @@ const pool = new Pool({
 const createTables = () => {
     const teamworkDb = `
         CREATE TABLE IF NOT EXISTS users (
-            Id SERIAL PRIMARY KEY,
+            userId SERIAL PRIMARY KEY,
             firstName VARCHAR(255) NOT NULL,
             lastName VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL,
@@ -33,28 +33,28 @@ const createTables = () => {
             createdOn TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
         CREATE TABLE IF NOT EXISTS posts (
-            id SERIAL PRIMARY KEY,
+            articleId SERIAL PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             article VARCHAR(255) NOT NULL,
-            authorId INTEGER REFERENCES users(id),
+            authorId INTEGER REFERENCES users(userId),
             flagged BOOLEAN NULL,
             createdOn TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
         CREATE TABLE IF NOT EXISTS gifs (
-            id SERIAL PRIMARY KEY,
+            gifId SERIAL PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             imageUrl VARCHAR(255) NOT NULL,
             publicId VARCHAR(255) NOT NULL,
-            authorId INTEGER REFERENCES users(Id),
+            authorId INTEGER REFERENCES users(userId),
             flagged BOOLEAN NULL,
             createdOn TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
         CREATE TABLE IF NOT EXISTS comments (
-            id SERIAL PRIMARY KEY,
+            commentId SERIAL PRIMARY KEY,
             comment VARCHAR(255) NOT NULL,
-            postId INTEGER REFERENCES posts(id) NULL,
-            gifId INTEGER REFERENCES gifs(id) NULL,
-            authorId INTEGER REFERENCES users(id),
+            postId INTEGER REFERENCES posts(articleId) NULL,
+            gifId INTEGER REFERENCES gifs(gifId) NULL,
+            authorId INTEGER REFERENCES users(userId),
             createdOn TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )`;
     pool.query(teamworkDb)

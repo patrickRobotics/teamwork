@@ -1,5 +1,5 @@
-const { pool } = require('../services/db');
 const jwt = require('jsonwebtoken');
+const { pool } = require('../services/db');
 
 exports.getPosts = (req, res) => {
     pool.connect((err, client, done) => {
@@ -28,7 +28,7 @@ exports.getPostById = (req, res) => {
     // eslint-disable-next-line radix
     const postId = parseInt(req.params.id);
     pool.connect((err, client, done) => {
-        const query = 'SELECT id, title, article, authorid, flagged, createdon FROM posts WHERE id = $1';
+        const query = 'SELECT articleId, title, article, authorid, flagged, createdon FROM posts WHERE articleId = $1';
         client.query(query, [postId], (error, result) => {
             done();
             if (error) {
@@ -43,14 +43,14 @@ exports.getPostById = (req, res) => {
                     error: 'Article with that id was not found',
                 });
             } else {
-                const query1 = 'SELECT id, authorid, comment FROM comments WHERE postid = $1';
+                const query1 = 'SELECT commentId, authorid, comment FROM comments WHERE postid = $1';
                 client.query(query1, [postId])
                     .then((data) => {
                         const comments = data.rows[0];
                         Object.assign(result.rows[0], { comments });
                         res.status(200).send({
                             status: 'success',
-                            data: result.rows,
+                            data: result.rows[0],
                         });
                         // eslint-disable-next-line no-console
                     }).catch((e) => console.log(e));
@@ -81,9 +81,11 @@ exports.createPost = (req, res) => {
                     error: 'An error occurred with your query',
                 });
             } else {
+                const message = 'Article successfully posted';
+                Object.assign(result.rows[0], { message });
                 res.status(202).send({
                     status: 'success',
-                    result: result.rows[0],
+                    data: result.rows[0],
                 });
             }
         });
@@ -105,19 +107,26 @@ exports.updatePost = (req, res) => {
     };
     pool.connect((err, client, done) => {
         client.query(
-            'UPDATE posts SET title=$2, article=$3, authorid=$4 WHERE id = $1',
+            'UPDATE posts SET title=$2, article=$3, authorid=$4 WHERE articleId = $1',
             [postId, data.title, data.article, data.authorId],
             (error) => {
-                done();
                 if (error) {
                     res.status(400).json({
                         status: 'error',
                         error: 'An error occurred with your query',
                     });
                 } else {
-                    res.status(202).send({
-                        status: 'success',
-                    });
+                    const message = 'Article successfully updated';
+                    const queryResult = 'SELECT articleId, title, article, authorid, flagged, createdon FROM posts WHERE articleId = $1';
+                    client.query(queryResult, [postId]).then((responseData) => {
+                        Object.assign(responseData.rows[0], { message });
+                        res.status(200).send({
+                            status: 'success',
+                            data: responseData.rows[0],
+                        });
+                        // eslint-disable-next-line no-console
+                    }).catch((e) => console.log(e));
+                    done();
                 }
             },
         );
@@ -128,7 +137,7 @@ exports.deletePost = (req, res) => {
     // eslint-disable-next-line radix
     const postId = parseInt(req.params.id);
     pool.connect((er, client, done) => {
-        const query = 'DELETE from posts WHERE id = $1';
+        const query = 'DELETE from posts WHERE articleId = $1';
         client.query(query, [postId], (error) => {
             done();
             if (error) {
@@ -139,6 +148,7 @@ exports.deletePost = (req, res) => {
             } else {
                 res.status(200).send({
                     status: 'success',
+                    data: { message: 'Article successfully deleted' },
                 });
             }
         });

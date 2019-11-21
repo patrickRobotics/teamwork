@@ -8,7 +8,7 @@ exports.login = (req, res) => {
 
     if (email && password) {
         pool.connect((err, client, done) => {
-            const query = 'SELECT id, email, password FROM users WHERE email = $1';
+            const query = 'SELECT userId, email, password FROM users WHERE email = $1';
             client.query(query, [email], (error, result) => {
                 done();
                 if (error) {
@@ -37,7 +37,7 @@ exports.login = (req, res) => {
                         Object.assign(result.rows[0], { token });
                         res.status(200).send({
                             status: 'success',
-                            data: result.rows,
+                            data: result.rows[0],
                         });
                     }).catch((er) => {
                         res.status(500).json({
@@ -83,7 +83,9 @@ exports.createUser = (req, res) => {
                         const token = jwt.sign({ id: result.rows[0].id }, process.env.TOKEN_SECRET, {
                             expiresIn: 86400,
                         });
+                        const message = 'User account successfully created';
                         Object.assign(result.rows[0], { token });
+                        Object.assign(result.rows[0], { message });
                         res.status(202).send({
                             status: 'success',
                             result: result.rows[0],
@@ -97,7 +99,7 @@ exports.createUser = (req, res) => {
 
 exports.getUsers = (req, res) => {
     pool.connect((err, client, done) => {
-        const query = 'SELECT id, firstName, lastName, email, is_admin, gender, department, address, createdon FROM users';
+        const query = 'SELECT userId, firstName, lastName, email, is_admin, gender, department, address, createdon FROM users';
         client.query(query, (error, result) => {
             done();
             if (error) {
@@ -122,7 +124,7 @@ exports.getUserById = (req, res) => {
     // eslint-disable-next-line radix
     const employeeId = parseInt(req.params.id);
     pool.connect((err, client, done) => {
-        const query = 'SELECT id, firstName, lastName, email, is_admin, gender, department, address, createdon FROM users WHERE id = $1';
+        const query = 'SELECT userId, firstName, lastName, email, is_admin, gender, department, address, createdon FROM users WHERE userId = $1';
         client.query(query, [employeeId], (error, result) => {
             done();
             if (error) {
@@ -160,7 +162,7 @@ exports.updateUser = (req, res) => {
     };
     pool.connect((err, client, done) => {
         client.query(
-            'UPDATE users SET firstName=$2, lastName=$3, email=$4, gender=$5, is_admin=$6, department=$7, address=$8 WHERE id = $1',
+            'UPDATE users SET firstName=$2, lastName=$3, email=$4, gender=$5, is_admin=$6, department=$7, address=$8 WHERE userId = $1',
             [employeeId, data.first_name, data.last_name, data.email, data.gender, data.is_admin, data.department, data.address],
             (error) => {
                 done();
@@ -183,7 +185,7 @@ exports.deleteUser = (req, res) => {
     // eslint-disable-next-line radix
     const employeeId = parseInt(req.params.id);
     pool.connect((er, client, done) => {
-        const query = 'DELETE from users WHERE id = $1';
+        const query = 'DELETE from users WHERE userId = $1';
         client.query(query, [employeeId], (error) => {
             done();
             if (error) {
