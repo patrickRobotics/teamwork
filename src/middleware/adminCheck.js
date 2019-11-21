@@ -13,7 +13,7 @@ module.exports.isAdmin = (req, res, next) => {
         client.query(query, [data.id], (error, result) => {
             done();
             if (result.rows[0].is_admin === true) {
-                next(data.id);
+                next();
             } else {
                 res.status(401).send({
                     status: 'error',
