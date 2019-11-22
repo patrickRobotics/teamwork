@@ -31,7 +31,7 @@ exports.login = (req, res) => {
                                 error: 'Incorrect email or password!',
                             });
                         }
-                        const token = jwt.sign({ id: result.rows[0].id }, process.env.TOKEN_SECRET, {
+                        const token = jwt.sign({ id: result.rows[0].userid }, process.env.TOKEN_SECRET, {
                             expiresIn: 86400,
                         });
                         Object.assign(result.rows[0], { token });
