@@ -28,7 +28,7 @@ exports.getPostById = (req, res) => {
     // eslint-disable-next-line radix
     const postId = parseInt(req.params.id);
     pool.connect((err, client, done) => {
-        const query = 'SELECT articleId, title, article, authorid, flagged, createdon FROM posts WHERE articleId = $1';
+        const query = 'SELECT articleid AS id, title, article, authorid, flagged, createdon FROM posts WHERE articleId = $1';
         client.query(query, [postId], (error, result) => {
             done();
             if (error) {
@@ -178,12 +178,19 @@ exports.postComment = (req, res) => {
                     error: 'An error occurred with your query',
                 });
             } else {
-                const message = 'Comment successfully created';
-                Object.assign(result.rows[0], { message });
-                res.status(202).send({
-                    status: 'success',
-                    data: result.rows[0],
-                });
+                const query1 = 'SELECT article, title FROM posts WHERE articleid = $1';
+                client.query(query1, [postId])
+                    .then((articleData) => {
+                        const message = 'Comment successfully created';
+                        const articleTitle = articleData.rows[0].title;
+                        const { article } = articleData.rows[0];
+                        Object.assign(result.rows[0], { message, articleTitle, article });
+                        res.status(200).send({
+                            status: 'success',
+                            data: result.rows[0],
+                        });
+                        // eslint-disable-next-line no-console
+                    }).catch((e) => console.log(e));
             }
         });
     });

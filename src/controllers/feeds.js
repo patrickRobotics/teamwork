@@ -3,8 +3,8 @@ const { pool } = require('../services/db');
 exports.getFeeds = (req, res) => {
     pool.connect((err, client, done) => {
         const query = {
-            text: 'SELECT id, title as title, article, authorid, createdon FROM posts GROUP BY id '
-                + 'UNION ALL SELECT id, title, imageurl, authorid, createdon FROM gifs GROUP BY id'
+            text: 'SELECT articleid AS id, authorid, title, article, authorid, createdon FROM posts GROUP BY articleid '
+                + 'UNION ALL SELECT gifId AS id, gifId, title, imageurl, authorid, createdon FROM gifs GROUP BY gifId'
         };
         client.query(query, (error, result) => {
             done();

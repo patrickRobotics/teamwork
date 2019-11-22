@@ -105,7 +105,7 @@ exports.getGifsById = (req, res) => {
     // eslint-disable-next-line radix
     const gifId = parseInt(req.params.id);
     pool.connect((err, client, done) => {
-        const query = 'SELECT gifid, title, imageurl, publicid, authorid, flagged, createdon FROM gifs WHERE gifid = $1';
+        const query = 'SELECT gifid AS id, title, imageurl, publicid, authorid, flagged, createdon FROM gifs WHERE gifid = $1';
         client.query(query, [gifId], (error, result) => {
             done();
             if (error) {
@@ -127,7 +127,7 @@ exports.getGifsById = (req, res) => {
                         Object.assign(result.rows[0], { comments });
                         res.status(200).send({
                             status: 'success',
-                            data: result.rows,
+                            data: result.rows[0],
                         });
                         // eslint-disable-next-line no-console
                     }).catch((e) => console.log(e));
@@ -163,6 +163,7 @@ exports.deleteGif = (req, res) => {
                     } else {
                         res.status(200).send({
                             status: 'success',
+                            data: { message: 'gif post successfully deleted' },
                         });
                     }
                 });
@@ -189,17 +190,25 @@ exports.gifComment = (req, res) => {
         client.query(query, values, (error, result) => {
             done();
             if (error) {
+                // console.log(error);
                 res.status(400).json({
                     status: 'error',
                     error: 'An error occurred with your query',
                 });
             } else {
-                const message = 'Comment successfully created';
-                Object.assign(result.rows[0], { message });
-                res.status(202).send({
-                    status: 'success',
-                    data: result.rows[0],
-                });
+                const query1 = 'SELECT title, imageUrl FROM gifs WHERE gifid = $1';
+                client.query(query1, [gifId])
+                    .then((gifData) => {
+                        const message = 'Comment successfully created';
+                        const gifTitle = gifData.rows[0].title;
+                        const imageUrl = gifData.rows[0].imageurl;
+                        Object.assign(result.rows[0], { message, gifTitle, imageUrl });
+                        res.status(200).send({
+                            status: 'success',
+                            data: result.rows[0],
+                        });
+                        // eslint-disable-next-line no-console
+                    }).catch((e) => console.log(e));
             }
         });
     });
