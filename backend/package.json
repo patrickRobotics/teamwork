@@ -4,13 +4,13 @@
   "description": "DevC Training with Andela Capstone Project",
   "main": "src/index.js",
   "scripts": {
-    "start:dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "test": "mocha src/tests/*.js --exit",
-    "test-with-coverage": "nyc --reporter=text mocha src/tests/",
+    "start:dev": "nodemon src/backend/server.js",
+    "start": "node src/backend/server.js",
+    "test": "mocha src/backend/tests/*.js --exit",
+    "test-with-coverage": "nyc --reporter=text mocha src/backend/tests/",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
-    "createTables": "node src/services/db createTables",
-    "createAdmin": "node src/services/db createAdminUSer"
+    "createTables": "node src/backend/services/db createTables",
+    "createAdmin": "node src/backend/services/db createAdminUSer"
   },
   "repository": {
     "type": "git",
