@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/patrickRobotics/teamwork#readme",
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "latest",
     "chai": "^4.2.0",
     "cloudinary": "^1.17.0",
